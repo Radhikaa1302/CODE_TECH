@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #89f7fe, #66a6ff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    input {
+      padding: 10px;
+      width: 80%;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🌤️ Weather App</h2>
+    <input type="text" id="city" placeholder="Enter city (e.g. Indore)">
+    <br>
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="result" id="weatherResult"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('city').value;
+      if (!city) {
+        alert("Please enter a city name.");
+        return;
+      }
+
+      const response = await fetch(`https://wttr.in/${city}?format=j1`);
+      if (!response.ok) {
+        document.getElementById('weatherResult').innerText = "Failed to fetch weather.";
+        return;
+      }
+
+      const data = await response.json();
+      const current = data.current_condition[0];
+      const output = `
+        <strong>${city}</strong><br>
+        Temperature: ${current.temp_C} °C<br>
+        Weather: ${current.weatherDesc[0].value}<br>
+        Humidity: ${current.humidity}%<br>
+        Wind: ${current.windspeedKmph} km/h
+      `;
+      document.getElementById('weatherResult').innerHTML = output;
+    }
+  </script>
+
+</body>
+</html>
